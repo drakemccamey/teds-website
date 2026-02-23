@@ -6,7 +6,7 @@
     <title>Ted's — Pressed Flat. Built Loud.</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
 
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,6 +36,19 @@
             overflow-x: hidden;
         }
 
+        /* Subtle global vintage grain overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            z-index: 9998;
+            pointer-events: none;
+            opacity: .022;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 200px 200px;
+        }
+
         /* ─── NAV ─────────────────────────────────────── */
         nav {
             position: fixed;
@@ -63,6 +76,22 @@
             letter-spacing: 4px;
             color: #fff;
             text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-logo-img {
+            height: 38px;
+            width: auto;
+            display: block;
+        }
+
+        .nav-logo-text {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 26px;
+            letter-spacing: 4px;
+            color: #fff;
+            display: none;
         }
 
         .nav-links {
@@ -163,12 +192,15 @@
         }
 
         /* Layer 1: burger photo — parallax via JS */
+        /* ↳ DROP PHOTO: place assets/hero-smash.jpg in project — it loads first automatically */
         #hero-bg {
             position: absolute;
             inset: -15% 0;           /* extra height for parallax headroom */
-            background-image: url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1920&q=85');
+            background-image:
+                url('assets/hero-smash.jpg'),
+                url('https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1920&q=85');
             background-size: cover;
-            background-position: center 55%;
+            background-position: center 40%;
             will-change: transform;
             z-index: 0;
         }
@@ -197,19 +229,47 @@
             pointer-events: none;
         }
 
-        /* Layer 4: grain texture */
+        /* Layer 4: grain texture — slightly heavier for vintage feel */
         .hero-grain {
             position: absolute;
             inset: 0;
             z-index: 3;
             pointer-events: none;
-            opacity: .048;
+            opacity: .065;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E");
             background-repeat: repeat;
             background-size: 200px 200px;
         }
 
-        /* Layer 5: content */
+        /* Layer 5: smash burger SVG illustration — z:4, above grain, below hero text */
+        /* Once assets/hero-smash.jpg is live this becomes a subtle foreground accent */
+        .hero-burger {
+            position: absolute;
+            bottom: 64px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
+            width: 580px;
+            max-width: 90vw;
+            pointer-events: none;
+            opacity: .62;
+            /* fade edges so it blends into the dark overlay naturally */
+            -webkit-mask-image: linear-gradient(to bottom,
+                transparent 0%,
+                rgba(0,0,0,.5) 18%,
+                black 36%,
+                black 78%,
+                transparent 100%);
+            mask-image: linear-gradient(to bottom,
+                transparent 0%,
+                rgba(0,0,0,.5) 18%,
+                black 36%,
+                black 78%,
+                transparent 100%);
+            animation: heroFadeUp .95s var(--ease-out) .5s both;
+        }
+
+        /* Layer 6: content */
         .hero-content {
             position: relative;
             z-index: 10;
@@ -245,19 +305,22 @@
         }
 
         .hero-title {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: clamp(130px, 22vw, 260px);
-            line-height: .88;
-            letter-spacing: -4px;
+            /* Pacifico — handcrafted sign script, Google Fonts */
+            font-family: 'Pacifico', cursive;
+            font-size: clamp(86px, 14.5vw, 186px);
+            line-height: 1.08;
+            letter-spacing: 2px;
             display: block;
-            background: linear-gradient(165deg, #fff 25%, rgba(255,255,255,.35) 100%);
+            background: linear-gradient(160deg, #fff 28%, rgba(255,255,255,.42) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
             user-select: none;
-            /* subtle text-shadow equivalent via drop-shadow filter */
-            filter: drop-shadow(0 2px 32px rgba(0,0,0,.6));
+            /* warm red halo + deep shadow for depth on dark bg */
+            filter:
+                drop-shadow(0 4px 32px rgba(0,0,0,.78))
+                drop-shadow(0 0 90px rgba(196,30,30,.11));
         }
 
         .hero-rule {
@@ -574,6 +637,107 @@
             color: var(--text-muted);
         }
 
+        /* ─── STORY ───────────────────────────────────── */
+        #story {
+            background: var(--black);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .story-layout {
+            display: grid;
+            grid-template-columns: 1fr 320px;
+            gap: 100px;
+            align-items: center;
+        }
+
+        .story-body p {
+            font-size: 16px;
+            font-weight: 300;
+            line-height: 1.9;
+            color: var(--text-sec);
+            margin-bottom: 18px;
+        }
+
+        .story-body p strong {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .story-motto {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 48px;
+            letter-spacing: 5px;
+            color: var(--accent);
+            display: block;
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 1px solid var(--border);
+            text-shadow: 0 0 40px var(--accent-glow);
+        }
+
+        .story-aside {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 22px;
+        }
+
+        .story-badge {
+            width: 210px;
+            height: 210px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--charcoal);
+            overflow: hidden;
+            box-shadow: 0 0 0 6px var(--charcoal-2), 0 0 0 7px var(--border), 0 0 40px rgba(0,0,0,.6);
+            position: relative;
+        }
+
+        /* Subtle warm ring glow */
+        .story-badge::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            box-shadow: inset 0 0 24px rgba(210,130,50,.06);
+            pointer-events: none;
+        }
+
+        .story-logo {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+        }
+
+        .story-badge-fallback {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 58px;
+            letter-spacing: 4px;
+            color: var(--accent);
+        }
+
+        .story-tags {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .story-tag {
+            background: var(--charcoal);
+            border: 1px solid var(--border);
+            padding: 11px 18px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
         /* ─── MENU ────────────────────────────────────── */
         #menu { background: var(--black); }
 
@@ -805,10 +969,23 @@
         }
 
         .foot-logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .foot-logo-img {
+            height: 30px;
+            width: auto;
+            opacity: .4;
+            filter: grayscale(1);
+        }
+
+        .foot-logo-text {
             font-family: 'Bebas Neue', sans-serif;
             font-size: 22px;
             letter-spacing: 5px;
             color: var(--text-muted);
+            display: none;
         }
 
         .foot-copy {
@@ -822,6 +999,7 @@
         /* ─── RESPONSIVE ──────────────────────────────── */
         @media (max-width: 1024px) {
             .about-layout   { grid-template-columns: 1fr; gap: 56px; }
+            .story-layout   { grid-template-columns: 1fr; gap: 56px; }
             .contact-layout { grid-template-columns: 1fr; gap: 56px; }
         }
 
@@ -836,13 +1014,16 @@
 
             section { padding: 80px 24px; }
 
-            .hero-title { font-size: clamp(90px, 26vw, 150px); }
+            .hero-title { font-size: clamp(72px, 22vw, 130px); }
+            .hero-burger { opacity: .42; bottom: 48px; }
 
             .menu-head { flex-direction: column; align-items: flex-start; gap: 8px; }
             .menu-note { text-align: left; }
 
             footer { padding: 28px 24px; }
             .foot-inner { flex-direction: column; gap: 10px; text-align: center; }
+
+            .story-aside { display: none; }
         }
 
         @media (max-width: 620px) {
@@ -866,9 +1047,15 @@
 
 <!-- ══ NAV ══════════════════════════════════════════════ -->
 <nav id="nav">
-    <a href="#hero" class="nav-logo">Ted's</a>
+    <a href="#hero" class="nav-logo">
+        <img src="assets/teds-logo.png" alt="Ted's" class="nav-logo-img"
+             onload="this.nextElementSibling.style.display='none'"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <span class="nav-logo-text">Ted's</span>
+    </a>
     <ul class="nav-links">
         <li><a href="#about">About</a></li>
+        <li><a href="#story">Story</a></li>
         <li><a href="#menu">Menu</a></li>
         <li><a href="#contact">Contact</a></li>
     </ul>
@@ -880,6 +1067,7 @@
 
 <div class="mob-drawer" id="mobDrawer">
     <a href="#about"   class="mob-link">About</a>
+    <a href="#story"   class="mob-link">Story</a>
     <a href="#menu"    class="mob-link">Menu</a>
     <a href="#contact" class="mob-link">Contact</a>
 </div>
@@ -891,16 +1079,120 @@
     <div class="hero-vignette"></div>
     <div class="hero-grain"></div>
 
+    <!-- Smash burger illustration — replace with real photo: drop assets/hero-smash.jpg -->
+    <div class="hero-burger" aria-hidden="true">
+        <svg viewBox="0 0 580 192" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+
+            <!-- Ground shadow -->
+            <ellipse cx="290" cy="186" rx="208" ry="9" fill="rgba(0,0,0,0.5)"/>
+
+            <!-- ─── BOTTOM BUN ─────────────────────────── -->
+            <ellipse cx="290" cy="172" rx="218" ry="16" fill="#9A5420"/>
+            <rect x="74" y="162" width="432" height="14" rx="5" fill="#B06228"/>
+            <ellipse cx="290" cy="162" rx="216" ry="10" fill="#C07030"/>
+
+            <!-- Sauce pool under patty stack -->
+            <ellipse cx="290" cy="158" rx="200" ry="7.5" fill="#8C1E12" opacity=".78"/>
+
+            <!-- ─── PATTY 1 (bottom) — THIN + LACY CRISPY EDGES ───── -->
+            <!-- Lacy irregular edge extensions -->
+            <ellipse cx="86"  cy="147" rx="16" ry="5.5" fill="#220A02" transform="rotate(-12 86 147)"/>
+            <ellipse cx="494" cy="147" rx="16" ry="5.5" fill="#220A02" transform="rotate(12 494 147)"/>
+            <ellipse cx="114" cy="144" rx="11" ry="4"   fill="#2E0E04" transform="rotate(-20 114 144)"/>
+            <ellipse cx="466" cy="144" rx="11" ry="4"   fill="#2E0E04" transform="rotate(20 466 144)"/>
+            <ellipse cx="142" cy="143" rx="9"  ry="3.5" fill="#220A02" transform="rotate(-8 142 143)"/>
+            <ellipse cx="438" cy="143" rx="9"  ry="3.5" fill="#220A02" transform="rotate(8 438 143)"/>
+            <!-- Patty 1 body — flat rectangle -->
+            <rect x="90" y="141" width="400" height="14" rx="3" fill="#190703"/>
+            <!-- Sear marks / char texture -->
+            <rect x="128" y="143" width="48" height="4"  rx="2" fill="#0A0201" opacity=".75"/>
+            <rect x="254" y="142" width="62" height="4"  rx="2" fill="#0A0201" opacity=".75"/>
+            <rect x="386" y="144" width="40" height="3"  rx="2" fill="#0A0201" opacity=".7"/>
+            <!-- Top highlight — browned crust -->
+            <rect x="90" y="141" width="400" height="3"  rx="2" fill="#3C1208" opacity=".8"/>
+
+            <!-- ─── MELTED AMERICAN CHEESE — the hero element ───────── -->
+            <!-- Drape left side -->
+            <path d="M88 140 Q79 143 77 152 Q80 158 90 157" fill="#C87218"/>
+            <!-- Drape right side -->
+            <path d="M492 140 Q501 143 503 152 Q500 158 490 157" fill="#C87218"/>
+            <!-- Cheese layer main — wider than patty to show drape -->
+            <rect x="76"  y="129" width="428" height="13" rx="3" fill="#D88B1E"/>
+            <ellipse cx="290" cy="142" rx="216" ry="10" fill="#BF7014"/>
+            <!-- Cheese top surface shine -->
+            <rect x="76"  y="129" width="428" height="4"  rx="2" fill="#EDA030" opacity=".52"/>
+            <!-- Highlight blob -->
+            <ellipse cx="205" cy="131" rx="34" ry="4" fill="#F4B840" opacity=".28"/>
+
+            <!-- ─── PATTY 2 (top) — THIN + LACY ─────────── -->
+            <!-- Lacy edges -->
+            <ellipse cx="88"  cy="122" rx="15" ry="5"   fill="#220A02" transform="rotate(-10 88 122)"/>
+            <ellipse cx="492" cy="122" rx="15" ry="5"   fill="#220A02" transform="rotate(10 492 122)"/>
+            <ellipse cx="118" cy="119" rx="10" ry="3.5" fill="#2E0E04" transform="rotate(-18 118 119)"/>
+            <ellipse cx="462" cy="119" rx="10" ry="3.5" fill="#2E0E04" transform="rotate(18 462 119)"/>
+            <!-- Patty 2 body -->
+            <rect x="92" y="117" width="396" height="12" rx="3" fill="#190703"/>
+            <!-- Sear marks -->
+            <rect x="150" y="119" width="52" height="3" rx="2" fill="#0A0201" opacity=".7"/>
+            <rect x="300" y="118" width="58" height="3" rx="2" fill="#0A0201" opacity=".65"/>
+            <!-- Crust top -->
+            <rect x="92" y="117" width="396" height="3" rx="2" fill="#3C1208" opacity=".75"/>
+
+            <!-- ─── SPECIAL SAUCE (between stack + bun) ─── -->
+            <ellipse cx="290" cy="115" rx="194" ry="7.5" fill="#8C1E12" opacity=".62"/>
+            <!-- Sauce drips, front edge -->
+            <path d="M192 111 Q196 123 193 118" fill="#B02018" opacity=".82"/>
+            <path d="M330 110 Q335 124 332 119" fill="#B02018" opacity=".82"/>
+            <path d="M258 109 Q261 121 259 116" fill="#B02018" opacity=".7"/>
+
+            <!-- ─── TOP BUN — wide dome, LOW profile ─────── -->
+            <!-- Underside shadow -->
+            <ellipse cx="290" cy="110" rx="198" ry="9.5" fill="#7A3E10" opacity=".72"/>
+            <!-- Bun dome — path keeps it wide + flat arc, not tall -->
+            <path d="M84 106 Q90 54 290 38 Q490 54 496 106 Z" fill="#C07830"/>
+            <!-- Bottom rim -->
+            <rect x="84" y="98" width="412" height="10" rx="5" fill="#A86020"/>
+            <!-- Colour variation: darken sides naturally -->
+            <path d="M84 106 Q90 54 184 46 Q84 62 84 106" fill="rgba(0,0,0,.18)"/>
+            <path d="M496 106 Q490 54 396 46 Q496 62 496 106" fill="rgba(0,0,0,.18)"/>
+            <!-- Bun sheen -->
+            <ellipse cx="272" cy="66" rx="92" ry="28" fill="rgba(240,195,90,.065)"/>
+
+            <!-- ─── SESAME SEEDS ───────────────────────── -->
+            <!-- seed shape: outer dark + inner highlight -->
+            <ellipse cx="222" cy="66" rx="13" ry="6"   fill="#98501A" transform="rotate(-24 222 66)"/>
+            <ellipse cx="224" cy="64" rx="6.5" ry="2.8" fill="#C47030" opacity=".72" transform="rotate(-24 224 64)"/>
+
+            <ellipse cx="268" cy="54" rx="13" ry="6"   fill="#98501A" transform="rotate(-6 268 54)"/>
+            <ellipse cx="270" cy="52" rx="6.5" ry="2.8" fill="#C47030" opacity=".72" transform="rotate(-6 270 52)"/>
+
+            <ellipse cx="316" cy="54" rx="13" ry="6"   fill="#98501A" transform="rotate(8 316 54)"/>
+            <ellipse cx="318" cy="52" rx="6.5" ry="2.8" fill="#C47030" opacity=".72" transform="rotate(8 318 52)"/>
+
+            <ellipse cx="360" cy="66" rx="13" ry="6"   fill="#98501A" transform="rotate(24 360 66)"/>
+            <ellipse cx="362" cy="64" rx="6.5" ry="2.8" fill="#C47030" opacity=".72" transform="rotate(24 362 64)"/>
+
+            <ellipse cx="246" cy="80" rx="12" ry="5.5" fill="#98501A" transform="rotate(-14 246 80)"/>
+            <ellipse cx="248" cy="78" rx="6"   ry="2.5" fill="#C47030" opacity=".72" transform="rotate(-14 248 78)"/>
+
+            <ellipse cx="292" cy="76" rx="12" ry="5.5" fill="#98501A" transform="rotate(2 292 76)"/>
+            <ellipse cx="294" cy="74" rx="6"   ry="2.5" fill="#C47030" opacity=".72" transform="rotate(2 294 74)"/>
+
+            <ellipse cx="337" cy="78" rx="12" ry="5.5" fill="#98501A" transform="rotate(18 337 78)"/>
+            <ellipse cx="339" cy="76" rx="6"   ry="2.5" fill="#C47030" opacity=".72" transform="rotate(18 339 76)"/>
+        </svg>
+    </div>
+
     <div class="hero-content">
-        <div class="hero-eyebrow">Est. 2024 &mdash; Chicago, IL</div>
+        <div class="hero-eyebrow">Est. 2024 &mdash; Hico, TX</div>
         <h1 class="hero-title">Ted's</h1>
         <div class="hero-rule">
             <div class="hero-diamond"></div>
         </div>
-        <p class="hero-tagline">Pressed Flat. Built Loud. No Apologies.</p>
+        <p class="hero-tagline">Smashed to Order. Griddled Hot. No Apologies.</p>
         <div class="hero-actions">
             <a href="#menu"  class="btn-primary">View Menu</a>
-            <a href="#about" class="btn-ghost">Our Story</a>
+            <a href="#story" class="btn-ghost">Our Story</a>
         </div>
     </div>
 
@@ -914,21 +1206,21 @@
 <div class="ticker" aria-hidden="true">
     <div class="ticker-track">
         <span class="ticker-item">Smash Burgers<span class="ticker-dot"></span></span>
-        <span class="ticker-item">Fresh Ingredients<span class="ticker-dot"></span></span>
-        <span class="ticker-item">Craft Bowls<span class="ticker-dot"></span></span>
-        <span class="ticker-item">Chicago, IL<span class="ticker-dot"></span></span>
+        <span class="ticker-item">Crispy Edges<span class="ticker-dot"></span></span>
+        <span class="ticker-item">Griddled Fresh<span class="ticker-dot"></span></span>
+        <span class="ticker-item">Hico, TX<span class="ticker-dot"></span></span>
         <span class="ticker-item">No Apologies<span class="ticker-dot"></span></span>
         <span class="ticker-item">Open Daily<span class="ticker-dot"></span></span>
         <span class="ticker-item">House Sauce<span class="ticker-dot"></span></span>
-        <span class="ticker-item">Built Loud<span class="ticker-dot"></span></span>
+        <span class="ticker-item">Smashed to Order<span class="ticker-dot"></span></span>
         <span class="ticker-item">Smash Burgers<span class="ticker-dot"></span></span>
-        <span class="ticker-item">Fresh Ingredients<span class="ticker-dot"></span></span>
-        <span class="ticker-item">Craft Bowls<span class="ticker-dot"></span></span>
-        <span class="ticker-item">Chicago, IL<span class="ticker-dot"></span></span>
+        <span class="ticker-item">Crispy Edges<span class="ticker-dot"></span></span>
+        <span class="ticker-item">Griddled Fresh<span class="ticker-dot"></span></span>
+        <span class="ticker-item">Hico, TX<span class="ticker-dot"></span></span>
         <span class="ticker-item">No Apologies<span class="ticker-dot"></span></span>
         <span class="ticker-item">Open Daily<span class="ticker-dot"></span></span>
         <span class="ticker-item">House Sauce<span class="ticker-dot"></span></span>
-        <span class="ticker-item">Built Loud<span class="ticker-dot"></span></span>
+        <span class="ticker-item">Smashed to Order<span class="ticker-dot"></span></span>
     </div>
 </div>
 
@@ -939,9 +1231,9 @@
             <div class="about-body reveal">
                 <span class="label">Who We Are</span>
                 <h2 class="section-title">Built on Bold Flavor.</h2>
-                <p>Ted's doesn't dabble. We picked <strong>two things</strong>, got obsessive about both, and never looked back. Every smash has a reason. Every bowl is built with intent. Every ingredient earned its spot.</p>
-                <p>No trends. No shortcuts. No fifteen-ingredient sauces nobody asked for. Just <strong>clean execution</strong> and food worth driving across town for.</p>
-                <a href="#menu" class="btn-ghost">See What We Make</a>
+                <p>Ted's doesn't dabble. We picked <strong>one thing</strong>, got obsessive about it, and never looked back. Every patty is thin, every press is intentional, every edge gets crispy on a screaming-hot flat-top griddle.</p>
+                <p>No trends. No shortcuts. No thick pub burgers with nowhere to hide. Just <strong>smashed-to-order beef</strong>, melty American cheese, and the kind of crunch you can hear from across the table.</p>
+                <a href="#story" class="btn-ghost">Our Story</a>
             </div>
             <div class="stat-grid">
                 <div class="stat reveal">
@@ -965,6 +1257,35 @@
     </div>
 </section>
 
+<!-- ══ STORY ═════════════════════════════════════════════ -->
+<section id="story">
+    <div class="container">
+        <div class="story-layout">
+            <div class="story-body reveal">
+                <span class="label">Our Story</span>
+                <h2 class="section-title">Named After Teddy.</h2>
+                <p>Ted's started the way the best things do — with a name that <strong>meant something</strong>. Named after Teddy, a reminder that food should feel like family, not a transaction. No strangers here. Just people who came hungry and left regulars.</p>
+                <p>We're rooted in <strong>small-town Texas</strong>. Hico built us — the pace, the people, the honesty you only find where everybody knows your order before you say it. That spirit is pressed into every patty we put on the griddle.</p>
+                <p>This isn't a restaurant chasing a trend. It's a gathering spot. The griddle runs hot, the cheese stays melty, and the door's always open. Come as you are. Stay as long as you want.</p>
+                <span class="story-motto">Sit. Stay. Eat.</span>
+            </div>
+            <div class="story-aside reveal">
+                <div class="story-badge">
+                    <img src="assets/teds-logo.png" alt="Ted's" class="story-logo"
+                         onload="this.nextElementSibling.style.display='none'"
+                         onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                    <span class="story-badge-fallback" style="display:none">Ted's</span>
+                </div>
+                <div class="story-tags">
+                    <div class="story-tag">Est. 2024</div>
+                    <div class="story-tag">Hico, TX</div>
+                    <div class="story-tag">Smashed to Order</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
 <!-- ══ MENU ══════════════════════════════════════════════ -->
 <section id="menu">
     <div class="container">
@@ -981,7 +1302,7 @@
             <div class="card reveal">
                 <span class="card-tag">Burgers</span>
                 <h3 class="card-name">Classic Smash Burger</h3>
-                <p class="card-desc">Two smashed patties, American cheese, shredded lettuce, pickles, white onion, house sauce. A toasted brioche bun holding it all together. The one that started it.</p>
+                <p class="card-desc">Two thin patties smashed to order on a hot flat-top. Crispy griddled edges, melty American cheese, shredded lettuce, pickles, white onion, and house sauce on a toasted brioche bun. The one that started it all.</p>
                 <div class="card-foot">
                     <span class="card-price">$10</span>
                     <button class="card-add" aria-label="Add to order">+</button>
@@ -991,7 +1312,7 @@
             <div class="card reveal">
                 <span class="card-tag">Burgers</span>
                 <h3 class="card-name">Double Trouble Burger</h3>
-                <p class="card-desc">Four smashed patties, double cheese, caramelized onions, jalapeños, crispy bacon, and a heavy hand of house sauce. This one doesn't ask permission.</p>
+                <p class="card-desc">Four thin patties stacked in two griddled doubles — each layer getting its own crispy edges and melty American cheese. Caramelized onions, jalapeños, crispy bacon, heavy hand of house sauce. This one doesn't ask permission.</p>
                 <div class="card-foot">
                     <span class="card-price">$15</span>
                     <button class="card-add" aria-label="Add to order">+</button>
@@ -1001,7 +1322,7 @@
             <div class="card reveal">
                 <span class="card-tag">Bowls</span>
                 <h3 class="card-name">Sweet Heat Bowl</h3>
-                <p class="card-desc">Smashed beef over cilantro-lime rice, roasted corn, avocado, pickled red onion, sriracha honey drizzle, crushed tortilla chips. Sweet. Hot. Done right.</p>
+                <p class="card-desc">Griddled smash beef over cilantro-lime rice, roasted corn, avocado, pickled red onion, sriracha honey drizzle, crushed tortilla chips. Sweet. Hot. Done right.</p>
                 <div class="card-foot">
                     <span class="card-price">$13</span>
                     <button class="card-add" aria-label="Add to order">+</button>
@@ -1011,7 +1332,7 @@
             <div class="card reveal">
                 <span class="card-tag">Bowls</span>
                 <h3 class="card-name">The Ranch Bowl</h3>
-                <p class="card-desc">Chopped romaine, smashed beef, sharp cheddar, grape tomatoes, croutons, crispy bacon, and a house ranch that hits different. Clean. Cold. Satisfying.</p>
+                <p class="card-desc">Chopped romaine, griddled smash beef, sharp cheddar, grape tomatoes, croutons, crispy bacon, and a house ranch that hits different. Clean. Cold. Satisfying.</p>
                 <div class="card-foot">
                     <span class="card-price">$12</span>
                     <button class="card-add" aria-label="Add to order">+</button>
@@ -1049,7 +1370,7 @@
             <div class="contact-left reveal">
                 <span class="label">Find Us</span>
                 <h2 class="section-title">Come Eat.</h2>
-                <p>No reservations. No dress code. Walk in, sit down, eat something real. We'll be here — the food runs until it doesn't.</p>
+                <p>No reservations. No dress code. Walk in, sit down, eat something real. We'll be here — the griddle runs hot until it doesn't.</p>
                 <a href="#" class="btn-primary">Get Directions</a>
             </div>
 
@@ -1063,7 +1384,7 @@
                     </div>
                     <div>
                         <div class="info-lbl">Location</div>
-                        <div class="info-val">123 W. Randolph St.<br>Chicago, IL 60601</div>
+                        <div class="info-val">107 S Pecan St.<br>Hico, TX 76457</div>
                     </div>
                 </div>
 
@@ -1075,7 +1396,7 @@
                     </div>
                     <div>
                         <div class="info-lbl">Phone</div>
-                        <div class="info-val">(312) 555-0182</div>
+                        <div class="info-val">(254) 555-0182</div>
                     </div>
                 </div>
 
@@ -1099,9 +1420,14 @@
 <!-- ══ FOOTER ════════════════════════════════════════════ -->
 <footer>
     <div class="foot-inner">
-        <span class="foot-logo">Ted's</span>
+        <div class="foot-logo">
+            <img src="assets/teds-logo.png" alt="Ted's" class="foot-logo-img"
+                 onload="this.nextElementSibling.style.display='none'"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <span class="foot-logo-text">Ted's</span>
+        </div>
         <p class="foot-copy">
-            &copy; 2024 Ted's Restaurant &mdash; Chicago, IL &mdash;
+            &copy; 2024 Ted's Restaurant &mdash; Hico, TX &mdash;
             Made with <span class="foot-accent">&#9632;</span> and no apologies.
         </p>
     </div>
